@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.frontlinesms.test</groupId>
+	<artifactId>frontlinesms-plugins-test</artifactId>
+	<name>FrontlineSMS Plugin Test Library</name>
+	<version>0.0.1-SNAPSHOT</version>
+	<description>Shared test classes for FrontlineSMS plugins.</description>
+	<parent>
+		<groupId>net.frontlinesms.core</groupId>
+		<artifactId>frontlinesms-pom-parent</artifactId>
+		<version>1.7.0-beta-7-SNAPSHOT</version>
+		<relativePath>../pom-parent</relativePath>
+	</parent>
+	
+  
+	<dependencies>
+		<dependency>
+			<groupId>net.frontlinesms.core</groupId>
+			<artifactId>frontlinesms-test</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.frontlinesms.core</groupId>
+			<artifactId>smslib</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.frontlinesms.core</groupId>
+			<artifactId>frontlinesms-core</artifactId>
+		</dependency>
+	</dependencies>
+</project>
