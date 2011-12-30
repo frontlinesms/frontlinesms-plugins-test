@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
 import net.frontlinesms.junit.BaseTestCase;
-import net.frontlinesms.test.ui.ThinletEventHandlerTest;
 
 public class ApplicationContextAwareTestCase extends BaseTestCase {
 	@Mock protected ApplicationContext ctx;
@@ -34,7 +33,6 @@ public class ApplicationContextAwareTestCase extends BaseTestCase {
 	
 	private void initBeans(Class<?> c) {
 		try {
-			System.out.println(c.getDeclaredFields());
 			for(Field f : c.getDeclaredFields()) {
 				MockBean a = f.getAnnotation(MockBean.class);
 				if(a != null) {
