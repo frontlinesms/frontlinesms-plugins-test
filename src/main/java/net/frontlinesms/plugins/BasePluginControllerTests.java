@@ -3,19 +3,20 @@
  */
 package net.frontlinesms.plugins;
 
-import net.frontlinesms.junit.BaseTestCase;
+import net.frontlinesms.test.spring.ApplicationContextAwareTestCase;
 
 import static java.util.Locale.UK;
 
 /**
  * @author Alex Anderson
  */
-public abstract class BasePluginControllerTests<E extends BasePluginController> extends BaseTestCase {
+public abstract class BasePluginControllerTests<E extends BasePluginController> extends ApplicationContextAwareTestCase {
 	/** instance of <code>E</code> under test. */
 	protected E controller;
 	
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		this.controller = getControllerClass().newInstance();
 	}
 	

@@ -3,10 +3,10 @@ package net.frontlinesms.test.ui;
 import java.util.Collections;
 
 import thinlet.Thinlet;
-import net.frontlinesms.junit.BaseTestCase;
+import net.frontlinesms.test.spring.ApplicationContextAwareTestCase;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 
-public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> extends BaseTestCase  {
+public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> extends ApplicationContextAwareTestCase  {
 	protected TestFrontlineUI ui;
 	/** event handler instance under test */
 	protected E h;
@@ -16,11 +16,14 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
 		Thinlet.DEFAULT_ENGLISH_BUNDLE = Collections.emptyMap();
 		ui = new TestFrontlineUI();
 		h = initHandler();
 		rootComponent = getRootComponent();
-		ui.add(rootComponent);
+		if(Thinlet.getClass(rootComponent).equals(Thinlet.DIALOG)) {
+			ui.add(rootComponent);
+		}
 	}
 
 	protected abstract E initHandler();
@@ -53,6 +56,7 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 			while(ui.getParent(c) != null) c=ui.getParent(c);
 			return c == ui.getDesktop();
 		}
+		public int getChildCount() { return ui.getItems(component).length; }
 	}
 	
 	private ThinletComponent create(Object parent, String componentName) {

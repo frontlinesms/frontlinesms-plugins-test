@@ -16,6 +16,7 @@ public class MissingThinletComponent implements ThinletComponent {
 	public void setText(String v) { fail(); }
 	public boolean isEnabled() { return fail(boolean.class); }
 	public boolean isVisible() { return fail(boolean.class); }
+	public int getChildCount() { return fail(int.class); }
 
 	private void fail() {
 		BaseTestCase.fail("Component missing: " + id);

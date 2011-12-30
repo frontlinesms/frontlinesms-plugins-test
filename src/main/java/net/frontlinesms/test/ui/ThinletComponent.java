@@ -8,4 +8,5 @@ public interface ThinletComponent {
 	public void setText(String text);
 	public boolean isEnabled();
 	public boolean isVisible();
+	public int getChildCount();
 }
