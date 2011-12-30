@@ -28,6 +28,10 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 
 	protected abstract E initHandler();
 	protected abstract Object getRootComponent();
+
+	protected void waitForUiEvents() {
+		new BlockingFrontlineUiUpdateJob() { public void run() {} }.execute();
+	}
 	
 //> UI INTERACTION METHODS/CLASSES
 	protected ThinletComponent $() {

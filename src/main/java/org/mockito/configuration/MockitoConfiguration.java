@@ -7,22 +7,18 @@ import net.frontlinesms.test.spring.MockBean;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.internal.configuration.DefaultAnnotationEngine;
 
-@SuppressWarnings("deprecation")
 public class MockitoConfiguration extends DefaultMockitoConfiguration {
 	@Override
 	public AnnotationEngine getAnnotationEngine() {
 		// Shamelessly copied from Mockito's DefaultAnnotationEngine, but with additional
 		// mock annotation added.
-		return new AnnotationEngine() {
+		return new DefaultAnnotationEngine() {
 			public Object createMockFor(Annotation annotation, Field field) {
-		        if (annotation instanceof Mock
-		        		|| annotation instanceof org.mockito.MockitoAnnotations.Mock
-		        		|| annotation instanceof MockBean) {
+		        if (annotation instanceof MockBean) {
 		            return Mockito.mock(field.getType(), field.getName());
-		        } else {
-		            return null;
-		        }
+		        } else return super.createMockFor(annotation, field);
 			}
 		};
 	}
