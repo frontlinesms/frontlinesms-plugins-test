@@ -11,11 +11,12 @@ import static java.util.Locale.UK;
  * @author Alex Anderson
  */
 public abstract class BasePluginControllerTests<E extends BasePluginController> extends BaseTestCase {
-	E p;
+	/** instance of <code>E</code> under test. */
+	protected E controller;
 	
 	@Override
 	protected void setUp() throws Exception {
-		this.p = getControllerClass().newInstance();
+		this.controller = getControllerClass().newInstance();
 	}
 	
 	public void testLoading() {
@@ -24,7 +25,7 @@ public abstract class BasePluginControllerTests<E extends BasePluginController> 
 	}
 	
 	public void testGetName() {
-		assertNotNull(p.getName(UK));
+		assertNotNull(controller.getName(UK));
 	}
 	
 	public void testIconExists() {
@@ -40,7 +41,7 @@ public abstract class BasePluginControllerTests<E extends BasePluginController> 
 	}
 	
 	public void testTextBundleLoading() {
-		assertNotNull(p.getTextResource());
+		assertNotNull(controller.getTextResource());
 	}
 	
 	private void testFileExists(String description, String location, boolean isSpring) {
@@ -54,7 +55,7 @@ public abstract class BasePluginControllerTests<E extends BasePluginController> 
 			location = "/" + location.substring("classpath:".length());
 		}
 		assertNotNull(description + " (" + specifiedLocation + ") could not be found on classpath.",
-				p.getClass().getResourceAsStream(location));
+				controller.getClass().getResourceAsStream(location));
 	}
 
 	private PluginControllerProperties getPropertiesAnnotation() {
