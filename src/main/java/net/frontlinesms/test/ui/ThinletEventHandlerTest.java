@@ -39,7 +39,7 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	}
 	
 	protected ThinletComponent $(String componentName) {
-		return create(rootComponent, componentName);
+		return findAndCreate(rootComponent, componentName);
 	}
 
 	protected class RealThinletComponent implements ThinletComponent {
@@ -61,12 +61,29 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 			return c == ui.getDesktop();
 		}
 		public int getChildCount() { return ui.getItems(component).length; }
+		public ThinletComponent getSelected() { return createFromSelected(component); }
+		public void setSelected(Object selectedComponent) { ui.setSelectedItem(component, selectedComponent); }
+		public void setSelectedByText(String text) {
+			for(Object o : ui.getItems(component)) {
+				if(ui.getText(o).equals(text)) {
+					setSelected(o);
+					return;
+				}
+			}
+		}
+		public Object getAttachment() { return ui.getAttachedObject(component); }
 	}
 	
-	private ThinletComponent create(Object parent, String componentName) {
+	private ThinletComponent findAndCreate(Object parent, String componentName) {
 		Object component = Thinlet.find(parent, componentName);
 		if(component == null) component = ui.find(componentName);
 		if(component == null) return new MissingThinletComponent(componentName);
 		else return new RealThinletComponent(component);
+	}
+	
+	private ThinletComponent createFromSelected(Object parent) {
+		Object selectedChild = ui.getSelectedItem(parent);
+		if(selectedChild == null) return new MissingThinletComponent("No selected item in " + ui.getName(parent));
+		else return new RealThinletComponent(selectedChild);
 	}
 }

@@ -9,4 +9,8 @@ public interface ThinletComponent {
 	public boolean isEnabled();
 	public boolean isVisible();
 	public int getChildCount();
+	public ThinletComponent getSelected();
+	public void setSelectedByText(String text);
+	public void setSelected(Object selectedComponent);
+	public Object getAttachment();
 }
