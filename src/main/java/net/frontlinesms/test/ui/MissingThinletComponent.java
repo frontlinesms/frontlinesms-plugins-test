@@ -14,13 +14,11 @@ public class MissingThinletComponent implements ThinletComponent {
 	public void close() { fail(); }
 	public String getText() { return fail(String.class); }
 	public void setText(String v) { fail(); }
+	public boolean isEditable() { return fail(boolean.class); }
 	public boolean isEnabled() { return fail(boolean.class); }
 	public boolean isVisible() { return fail(boolean.class); }
 	public int getChildCount() { return fail(int.class); }
-	public ThinletComponent getSelected() { return fail(ThinletComponent.class); }
-	public void setSelected(Object selectedComponent) { fail(); }
-	public void setSelectedByText(String text) { fail(); }
-	public Object getAttachment() { return fail(Object.class); }
+	public void setSelected(String text) { fail(); }
 
 	private void fail() {
 		BaseTestCase.fail("Component missing: " + id);

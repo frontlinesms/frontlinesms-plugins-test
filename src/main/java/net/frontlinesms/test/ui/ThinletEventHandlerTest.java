@@ -17,6 +17,13 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	protected void setUp() throws Exception {
 		super.setUp();
 		
+		initUiForTests();
+	}
+	
+	/** Initialise fields of this class for testing.  This is called as part of {@link #setUp()},
+	 * but it may be useful to call it again later if e.g. UI needs to be reinitialised after
+	 * data mocking/fixtures are in place. */
+	protected void initUiForTests() {
 		Thinlet.DEFAULT_ENGLISH_BUNDLE = Collections.emptyMap();
 		ui = new TestFrontlineUI();
 		h = initHandler();
@@ -52,8 +59,12 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 		public void click() { ui.invokeAction(component); }
 		public void close() { ui.invokeClose(component); }
 		public String getText() { return ui.getText(component); }
-		public void setText(String text) { ui.type(component, text); }
+		public void setText(String text) {
+			if(!isEditable()) fail("Cannot set text on uneditable component.");
+			else ui.type(component, text);
+		}
 		public void exists() {}
+		public boolean isEditable() { return ui.getBoolean(component, "editable"); }
 		public boolean isEnabled() { return ui.isEnabled(component); }
 		public boolean isVisible() {
 			Object c = component;
@@ -61,17 +72,21 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 			return c == ui.getDesktop();
 		}
 		public int getChildCount() { return ui.getItems(component).length; }
-		public ThinletComponent getSelected() { return createFromSelected(component); }
-		public void setSelected(Object selectedComponent) { ui.setSelectedItem(component, selectedComponent); }
-		public void setSelectedByText(String text) {
-			for(Object o : ui.getItems(component)) {
-				if(ui.getText(o).equals(text)) {
-					setSelected(o);
+		public Object getAttachment() { return ui.getAttachedObject(component); }
+		public void setSelected(String text) {
+			for(Object i : ui.getItems(component)) {
+				if(ui.getText(i).equals(text)) {
+					if(Thinlet.getClass(component).equals(Thinlet.COMBOBOX)) {
+						ui.setText(component, text);
+						ui.invokeAction(component);
+					} else {
+						ui.setSelectedItem(component, i);
+						// TODO possibly need to invoke change listener here
+					}
 					return;
 				}
 			}
 		}
-		public Object getAttachment() { return ui.getAttachedObject(component); }
 	}
 	
 	private ThinletComponent findAndCreate(Object parent, String componentName) {
@@ -79,11 +94,5 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 		if(component == null) component = ui.find(componentName);
 		if(component == null) return new MissingThinletComponent(componentName);
 		else return new RealThinletComponent(component);
-	}
-	
-	private ThinletComponent createFromSelected(Object parent) {
-		Object selectedChild = ui.getSelectedItem(parent);
-		if(selectedChild == null) return new MissingThinletComponent("No selected item in " + ui.getName(parent));
-		else return new RealThinletComponent(selectedChild);
 	}
 }
