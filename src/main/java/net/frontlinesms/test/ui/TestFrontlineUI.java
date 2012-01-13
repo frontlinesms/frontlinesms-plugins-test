@@ -27,14 +27,21 @@ public class TestFrontlineUI extends FrontlineUI {
 				public void run() {
 					setFocus(component);
 					while(!getText(component).isEmpty()) {
-						processEvent(new KeyEvent(TestFrontlineUI.this, KeyEvent.KEY_PRESSED, now(), 0, KeyEvent.VK_BACK_SPACE, KeyEvent.CHAR_UNDEFINED));
+						keyVk(KeyEvent.VK_BACK_SPACE);
 					}
 					for(char c : text.toCharArray()) {
-						processEvent(new KeyEvent(TestFrontlineUI.this, KeyEvent.KEY_TYPED, now(), 0, KeyEvent.VK_UNDEFINED, c));
+						keyChar(c);
 					}
 				}
 			}.execute();
 		}
+	}
+	
+	public void keyVk(int keyVkThing_givemeapropername) {
+		processEvent(new KeyEvent(TestFrontlineUI.this, KeyEvent.KEY_PRESSED, now(), 0, keyVkThing_givemeapropername, KeyEvent.CHAR_UNDEFINED));
+	}
+	public void keyChar(char keyChar) {
+		processEvent(new KeyEvent(TestFrontlineUI.this, KeyEvent.KEY_TYPED, now(), 0, KeyEvent.VK_UNDEFINED, keyChar));
 	}
 	
 	private long now() { return System.currentTimeMillis(); }

@@ -1,10 +1,13 @@
 package net.frontlinesms.test.ui;
 
+import java.awt.event.KeyEvent;
 import java.util.Collections;
 
 import thinlet.Thinlet;
 import net.frontlinesms.test.spring.ApplicationContextAwareTestCase;
 import net.frontlinesms.ui.ThinletUiEventHandler;
+
+import static thinlet.Thinlet.*;
 
 public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> extends ApplicationContextAwareTestCase  {
 	protected TestFrontlineUI ui;
@@ -24,11 +27,11 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	 * but it may be useful to call it again later if e.g. UI needs to be reinitialised after
 	 * data mocking/fixtures are in place. */
 	protected void initUiForTests() {
-		Thinlet.DEFAULT_ENGLISH_BUNDLE = Collections.emptyMap();
+		DEFAULT_ENGLISH_BUNDLE = Collections.emptyMap();
 		ui = new TestFrontlineUI();
 		h = initHandler();
 		rootComponent = getRootComponent();
-		if(Thinlet.getClass(rootComponent).equals(Thinlet.DIALOG)) {
+		if(Thinlet.getClass(rootComponent).equals(DIALOG)) {
 			ui.add(rootComponent);
 		}
 	}
@@ -58,6 +61,18 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 		}
 		public void click() { ui.invokeAction(component); }
 		public void close() { ui.invokeClose(component); }
+		public void select() {
+			onlyFor(WIDGET_CHECKBOX);
+			new BlockingFrontlineUiUpdateJob() {
+				public void run() {
+					System.out.println(ui.getName(component));
+					if(!ui.isSelected(component)) {
+						ui.setFocus(component);
+						ui.keyChar(' ');
+					}					
+				}
+			}.execute();
+		}
 		public String getText() { return ui.getText(component); }
 		public void setText(String text) {
 			if(!isEditable()) fail("Cannot set text on uneditable component.");
@@ -65,6 +80,7 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 		}
 		public void exists() {}
 		public boolean isEditable() { return ui.getBoolean(component, "editable"); }
+		public boolean isChecked() { onlyFor(WIDGET_CHECKBOX); return ui.isSelected(component); }
 		public boolean isEnabled() { return ui.isEnabled(component); }
 		public boolean isVisible() {
 			Object c = component;
@@ -76,7 +92,7 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 		public void setSelected(String text) {
 			for(Object i : ui.getItems(component)) {
 				if(ui.getText(i).equals(text)) {
-					if(Thinlet.getClass(component).equals(Thinlet.COMBOBOX)) {
+					if(Thinlet.getClass(component).equals(COMBOBOX)) {
 						ui.setText(component, text);
 						ui.invokeAction(component);
 					} else {
@@ -87,10 +103,19 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 				}
 			}
 		}
+		
+		private void onlyFor(String... componentClasses) {
+			boolean validClass = false;
+			String cc = Thinlet.getClass(component);
+			for(String c : componentClasses) {
+				if(c.equals(cc)) validClass = true;
+			}
+			if(!validClass) fail("Cannot apply this method to component of class " + cc);
+		}
 	}
 	
 	private ThinletComponent findAndCreate(Object parent, String componentName) {
-		Object component = Thinlet.find(parent, componentName);
+		Object component = find(parent, componentName);
 		if(component == null) component = ui.find(componentName);
 		if(component == null) return new MissingThinletComponent(componentName);
 		else return new RealThinletComponent(component);
