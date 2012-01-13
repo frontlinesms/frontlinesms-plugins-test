@@ -1,6 +1,5 @@
 package net.frontlinesms.test.ui;
 
-import java.awt.event.KeyEvent;
 import java.util.Collections;
 
 import thinlet.Thinlet;
@@ -65,7 +64,6 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 			onlyFor(WIDGET_CHECKBOX);
 			new BlockingFrontlineUiUpdateJob() {
 				public void run() {
-					System.out.println(ui.getName(component));
 					if(!ui.isSelected(component)) {
 						ui.setFocus(component);
 						ui.keyChar(' ');

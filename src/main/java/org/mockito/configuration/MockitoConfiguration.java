@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 
 import net.frontlinesms.test.spring.MockBean;
 
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.internal.configuration.DefaultAnnotationEngine;
 
