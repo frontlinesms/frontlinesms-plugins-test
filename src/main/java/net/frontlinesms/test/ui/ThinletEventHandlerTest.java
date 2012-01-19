@@ -44,78 +44,20 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	
 //> UI INTERACTION METHODS/CLASSES
 	protected ThinletComponent $() {
-		return new RealThinletComponent(rootComponent);
+		return new RealThinletComponent(getClass().getSimpleName() + ":rootComponent", ui, rootComponent);
 	}
 	
+	/**
+	 * Finds a component with the given name.  Any descendant of {@link #rootComponent} will
+	 * be prioritised, but if none is found within {@link #rootComponent}, the whole UI will
+	 * be searched.
+	 * @param componentName
+	 * @return
+	 */
 	protected ThinletComponent $(String componentName) {
-		return findAndCreate(rootComponent, componentName);
-	}
-
-	protected class RealThinletComponent implements ThinletComponent {
-		private final Object component;
-		
-		private RealThinletComponent(Object c) {
-			if(c instanceof ThinletComponent) throw new IllegalArgumentException("Don't try to wrap multiple " + getClass().getName());
-			this.component = c;
-		}
-		public void click() { ui.invokeAction(component); }
-		public void close() { ui.invokeClose(component); }
-		public void select() {
-			onlyFor(WIDGET_CHECKBOX);
-			new BlockingFrontlineUiUpdateJob() {
-				public void run() {
-					if(!ui.isSelected(component)) {
-						ui.setFocus(component);
-						ui.keyChar(' ');
-					}					
-				}
-			}.execute();
-		}
-		public String getText() { return ui.getText(component); }
-		public void setText(String text) {
-			if(!isEditable()) fail("Cannot set text on uneditable component.");
-			else ui.type(component, text);
-		}
-		public void exists() {}
-		public boolean isEditable() { return ui.getBoolean(component, "editable"); }
-		public boolean isChecked() { onlyFor(WIDGET_CHECKBOX); return ui.isSelected(component); }
-		public boolean isEnabled() { return ui.isEnabled(component); }
-		public boolean isVisible() {
-			Object c = component;
-			while(ui.getParent(c) != null) c=ui.getParent(c);
-			return c == ui.getDesktop();
-		}
-		public int getChildCount() { return ui.getItems(component).length; }
-		public Object getAttachment() { return ui.getAttachedObject(component); }
-		public void setSelected(String text) {
-			for(Object i : ui.getItems(component)) {
-				if(ui.getText(i).equals(text)) {
-					if(Thinlet.getClass(component).equals(COMBOBOX)) {
-						ui.setText(component, text);
-						ui.invokeAction(component);
-					} else {
-						ui.setSelectedItem(component, i);
-						// TODO possibly need to invoke change listener here
-					}
-					return;
-				}
-			}
-		}
-		
-		private void onlyFor(String... componentClasses) {
-			boolean validClass = false;
-			String cc = Thinlet.getClass(component);
-			for(String c : componentClasses) {
-				if(c.equals(cc)) validClass = true;
-			}
-			if(!validClass) fail("Cannot apply this method to component of class " + cc);
-		}
-	}
-	
-	private ThinletComponent findAndCreate(Object parent, String componentName) {
-		Object component = find(parent, componentName);
+		Object component = find(rootComponent, componentName);
 		if(component == null) component = ui.find(componentName);
 		if(component == null) return new MissingThinletComponent(componentName);
-		else return new RealThinletComponent(component);
+		else return new RealThinletComponent(componentName, ui, component);
 	}
 }

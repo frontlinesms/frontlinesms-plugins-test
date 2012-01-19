@@ -1,5 +1,6 @@
 package net.frontlinesms.test.ui;
 
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 
@@ -9,6 +10,7 @@ import net.frontlinesms.ui.FrontlineUI;
 public class TestFrontlineUI extends FrontlineUI {
 	public TestFrontlineUI() {
 		// Fake that the Thinlet UI component has focus.
+		processEvent(new ComponentEvent(this, ComponentEvent.COMPONENT_SHOWN));
 		processEvent(new FocusEvent(this, FocusEvent.FOCUS_GAINED));
 	}
 	
@@ -27,21 +29,65 @@ public class TestFrontlineUI extends FrontlineUI {
 				public void run() {
 					setFocus(component);
 					while(!getText(component).isEmpty()) {
-						keyVk(KeyEvent.VK_BACK_SPACE);
+						if(getCaretPosition(component) == 0) {
+							keyVk_notThreadsafe(KeyEvent.VK_DELETE);
+						} else {
+							keyVk_notThreadsafe(KeyEvent.VK_BACK_SPACE);
+						}
 					}
 					for(char c : text.toCharArray()) {
-						keyChar(c);
+						keyChar_notThreadsafe(c);
 					}
 				}
 			}.execute();
 		}
 	}
 	
-	public void keyVk(int keyVkThing_givemeapropername) {
+	public void keyVk_threadSafe(final int keyVkThing_givemeapropername, final Object focusObject) {
+		new BlockingFrontlineUiUpdateJob() {
+			public void run() {
+				if(focusObject != null) setFocus(focusObject);
+				keyVk_notThreadsafe(keyVkThing_givemeapropername);
+			}
+		}.execute();
+	}
+	
+	public void keyVk_notThreadsafe(int keyVkThing_givemeapropername) {
 		processEvent(new KeyEvent(TestFrontlineUI.this, KeyEvent.KEY_PRESSED, now(), 0, keyVkThing_givemeapropername, KeyEvent.CHAR_UNDEFINED));
 	}
-	public void keyChar(char keyChar) {
+	
+	public void keyChar_threadsafe(final char keyChar, final Object focusObject) {
+		new BlockingFrontlineUiUpdateJob() {
+			public void run() {
+				if(focusObject != null) setFocus(focusObject);
+				keyChar_notThreadsafe(keyChar);
+			}
+		}.execute();
+	}
+	public void keyChar_notThreadsafe(char keyChar) {
 		processEvent(new KeyEvent(TestFrontlineUI.this, KeyEvent.KEY_TYPED, now(), 0, KeyEvent.VK_UNDEFINED, keyChar));
+	}
+	
+	public Object getTree(Object c) {
+		while(!getClass(c).equals(TREE)) {
+			c = getParent(c);
+		}
+		return c;
+	}
+	
+	public void setTreeSelection(Object node) {
+		Object tree = getTree(node);
+		selectItem(tree, node, true);
+	}
+	
+	public void invokeExpand(Object node) {
+		invoke(getTree(node), node, EXPAND);
+	}
+	
+	public void invokePerform(Object component) {
+		if(NODE.equals(getClass(component))) {
+			invoke(getTree(component), component, PERFORM);
+		} else invoke(component, null, PERFORM);
 	}
 	
 	private long now() { return System.currentTimeMillis(); }
