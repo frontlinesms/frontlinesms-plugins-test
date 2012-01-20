@@ -20,8 +20,11 @@ public interface ThinletComponent {
 	/** for radio buttons and checkboxes */
 	public boolean isChecked();
 	public boolean isExpanded();
+	public boolean isModal();
+	public void setAttachment(Object attachment);
 	public int getChildCount();
 	public ThinletComponentList getChild();
+	public ThinletComponent getChild(int index);
 	public ThinletComponentList getRootNode();
 	public ThinletComponentList getSubNode();
 	/** Set's the selected item by it's text value */

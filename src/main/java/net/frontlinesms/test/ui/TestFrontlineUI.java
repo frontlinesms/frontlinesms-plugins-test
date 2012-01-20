@@ -69,7 +69,11 @@ public class TestFrontlineUI extends FrontlineUI {
 	}
 	
 	public Object getTree(Object c) {
-		while(!getClass(c).equals(TREE)) {
+		return getAncestor(TREE, c);
+	}
+	
+	public Object getAncestor(String componentClass, Object c) {
+		while(!getClass(c).equals(componentClass)) {
 			c = getParent(c);
 		}
 		return c;
@@ -87,6 +91,10 @@ public class TestFrontlineUI extends FrontlineUI {
 	public void invokePerform(Object component) {
 		if(NODE.equals(getClass(component))) {
 			invoke(getTree(component), component, PERFORM);
+		} else if(ROW.equals(getClass(component))) {
+			Object table = getAncestor(TABLE, component);
+			setSelectedItem(table, component);
+			invoke(table, component, PERFORM);
 		} else invoke(component, null, PERFORM);
 	}
 	

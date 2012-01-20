@@ -22,8 +22,11 @@ public class MissingThinletComponent implements ThinletComponent {
 	public boolean isVisible() { return fail(boolean.class); }
 	public boolean isChecked() { return fail(boolean.class); }
 	public boolean isExpanded() { return fail(boolean.class); }
+	public boolean isModal() { return fail(boolean.class); }
+	public void setAttachment(Object attachment) { fail(); }
 	public ThinletComponent find(String _) { return fail(ThinletComponent.class); }
 	public ThinletComponentList getChild() { return fail(ThinletComponentList.class); }
+	public ThinletComponent getChild(int index) { return fail(ThinletComponent.class); }
 	public ThinletComponentList getRootNode() { return fail(ThinletComponentList.class); }
 	public ThinletComponentList getSubNode() { return fail(ThinletComponentList.class); }
 	public int getChildCount() { return fail(int.class); }

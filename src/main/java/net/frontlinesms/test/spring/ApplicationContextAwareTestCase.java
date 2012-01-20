@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContext;
 
 import net.frontlinesms.junit.BaseTestCase;
 
-public class ApplicationContextAwareTestCase extends BaseTestCase {
+public abstract class ApplicationContextAwareTestCase extends BaseTestCase {
 	@Mock protected ApplicationContext ctx;
 	
 	@Override

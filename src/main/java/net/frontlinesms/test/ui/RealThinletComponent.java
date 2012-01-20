@@ -53,6 +53,8 @@ public class RealThinletComponent implements ThinletComponent {
 		return c == ui.getDesktop();
 	}
 	public boolean isExpanded() { onlyFor(NODE); return ui.getBoolean(component, EXPANDED); }
+	public boolean isModal() { onlyFor(DIALOG); return ui.getBoolean(component, MODAL); }
+	public void setAttachment(Object attachment) { ui.setAttachedObject(component, attachment); }
 	public int getChildCount() {
 		return getChild().count(); }
 	public ThinletComponentList getRootNode() {
@@ -81,6 +83,7 @@ public class RealThinletComponent implements ThinletComponent {
 		return new ThinletComponentList(id + ".subNode", ui, kids);
 	}
 	public ThinletComponentList getChild() { notFor(TREE, NODE); return new ThinletComponentList(id + ".child", ui, ui.getItems(component)); }
+	public ThinletComponent getChild(int index) { return getChild().withIndex(index); }
 	public Object getAttachment() { return ui.getAttachedObject(component); }
 	public void setSelected(String text) {
 		for(Object i : ui.getItems(component)) {

@@ -25,5 +25,12 @@ public class ThinletComponentList {
 		return new MissingThinletComponent(generatedId);
 	}
 	
+	public ThinletComponent withIndex(int index) {
+		String generatedId = id + "[" + index + "]";
+		if(index < components.length)
+			return new RealThinletComponent(generatedId, ui, components[index]);
+		else return new MissingThinletComponent(generatedId);
+	}
+	
 	public int count() { return components.length; }
 }
