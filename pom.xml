@@ -12,6 +12,10 @@
 		<relativePath>../pom-parent</relativePath>
 	</parent>
 	
+	<properties>
+		<github.projectName>frontlinesms-plugins-test</github.projectName>
+		<github.projectOwner>frontlinesms</github.projectOwner>
+	</properties>
   
 	<dependencies>
 		<dependency>
