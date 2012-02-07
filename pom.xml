@@ -3,7 +3,7 @@
 	<groupId>net.frontlinesms.test</groupId>
 	<artifactId>frontlinesms-plugins-test</artifactId>
 	<name>FrontlineSMS Plugin Test Library</name>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<description>Shared test classes for FrontlineSMS plugins.</description>
 	<parent>
 		<groupId>net.frontlinesms.core</groupId>
