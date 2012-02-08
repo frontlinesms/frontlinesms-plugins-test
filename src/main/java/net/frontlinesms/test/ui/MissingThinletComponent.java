@@ -17,6 +17,8 @@ public class MissingThinletComponent implements ThinletComponent {
 	public void expand() { fail(); }
 	public String getText() { return fail(String.class); }
 	public void setText(String v) { fail(); }
+	public String[] getColumnText() { return fail(String[].class); }
+	public String[] getRowText(int index) { return fail(String[].class); }
 	public boolean isEditable() { return fail(boolean.class); }
 	public boolean isEnabled() { return fail(boolean.class); }
 	public boolean isVisible() { return fail(boolean.class); }
@@ -25,6 +27,7 @@ public class MissingThinletComponent implements ThinletComponent {
 	public boolean isModal() { return fail(boolean.class); }
 	public void setAttachment(Object attachment) { fail(); }
 	public ThinletComponent find(String _) { return fail(ThinletComponent.class); }
+	public String[] getOptions() { return fail(String[].class); }
 	public ThinletComponentList getChild() { return fail(ThinletComponentList.class); }
 	public ThinletComponent getChild(int index) { return fail(ThinletComponent.class); }
 	public ThinletComponentList getRootNode() { return fail(ThinletComponentList.class); }

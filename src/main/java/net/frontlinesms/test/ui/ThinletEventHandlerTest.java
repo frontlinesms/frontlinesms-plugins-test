@@ -1,11 +1,12 @@
 package net.frontlinesms.test.ui;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import thinlet.Thinlet;
+import net.frontlinesms.FrontlineSMSConstants;
 import net.frontlinesms.test.spring.ApplicationContextAwareTestCase;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 
@@ -29,7 +30,8 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	 * but it may be useful to call it again later if e.g. UI needs to be reinitialised after
 	 * data mocking/fixtures are in place. */
 	protected void initUiForTests() {
-		DEFAULT_ENGLISH_BUNDLE = new KeyReturningMap();
+		DEFAULT_ENGLISH_BUNDLE = new MostlyKeyReturningMap(
+				FrontlineSMSConstants.DATEFORMAT_YMD, /* -> */ "d/M/yy");
 		ui = new TestFrontlineUI();
 		h = initHandler();
 		rootComponent = getRootComponent();
@@ -65,13 +67,24 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	}
 }
 
-class KeyReturningMap implements Map<String, String> {
+class MostlyKeyReturningMap implements Map<String, String> {
+	private final HashMap<String, String> someValues = new HashMap<String, String>();
+	
+	MostlyKeyReturningMap(String... keyValuePairs) {
+		for (int i = 0; i < keyValuePairs.length; i+=2) {
+			someValues.put(keyValuePairs[i], keyValuePairs[i+1]);
+		}
+	}
+	
 	public void clear() {}
 	public boolean containsKey(Object _) { return true; }
 	public boolean containsValue(Object _) { return true; }
 	@SuppressWarnings("unchecked")
 	public Set<java.util.Map.Entry<String, String>> entrySet() { return unsupported(Set.class); }
-	public String get(Object key) { return key.toString(); }
+	public String get(Object key) {
+		if(someValues.containsKey(key)) return someValues.get(key);
+		else return key.toString();
+	}
 	public boolean isEmpty() { return false; }
 	@SuppressWarnings("unchecked")
 	public Set<String> keySet() { return unsupported(Set.class); }

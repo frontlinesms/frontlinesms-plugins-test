@@ -43,6 +43,16 @@ public class RealThinletComponent implements ThinletComponent {
 		if(!isEditable()) fail("Cannot set text on uneditable component.");
 		else ui.type(component, text);
 	}
+	public String[] getColumnText() {
+		onlyFor(TABLE);
+		Object[] children = ui.getItems(Thinlet.get(component, HEADER));
+		int childCount = children.length;
+		String[] text = new String[childCount];
+		for(int i=0; i<childCount; ++i) {
+			text[i] = ui.getText(children[i]);
+		}
+		return text;
+	}
 	public void exists() {}
 	public boolean isEditable() { return ui.getBoolean(component, "editable"); }
 	public boolean isChecked() { onlyFor(WIDGET_CHECKBOX); return ui.isSelected(component); }
@@ -55,6 +65,15 @@ public class RealThinletComponent implements ThinletComponent {
 	public boolean isExpanded() { onlyFor(NODE); return ui.getBoolean(component, EXPANDED); }
 	public boolean isModal() { onlyFor(DIALOG); return ui.getBoolean(component, MODAL); }
 	public void setAttachment(Object attachment) { ui.setAttachedObject(component, attachment); }
+	public String[] getOptions() {
+		onlyFor(COMBOBOX);
+		Object[] children = ui.getItems(component);
+		String[] options = new String[children.length];
+		for (int i = 0; i < options.length; i++) {
+			options[i] = ui.getText(children[i]);
+		}
+		return options;
+	} 
 	public int getChildCount() {
 		return getChild().count(); }
 	public ThinletComponentList getRootNode() {
@@ -84,15 +103,28 @@ public class RealThinletComponent implements ThinletComponent {
 	}
 	public ThinletComponentList getChild() { notFor(TREE, NODE); return new ThinletComponentList(id + ".child", ui, ui.getItems(component)); }
 	public ThinletComponent getChild(int index) { return getChild().withIndex(index); }
+	public String[] getRowText(int index) {
+		onlyFor(TABLE);
+		Object row = ui.getItem(component, index);
+		Object[] cells = ui.getItems(row);
+		String[] text = new String[cells.length];
+		for (int i = 0; i < text.length; i++) {
+			text[i] = ui.getText(cells[i]);
+		}
+		return text;
+	}
 	public Object getAttachment() { return ui.getAttachedObject(component); }
 	public void setSelected(String text) {
-		for(Object i : ui.getItems(component)) {
-			if(ui.getText(i).equals(text)) {
+		Object[] items = ui.getItems(component);
+		for(int index=0; index<items.length; ++index) {
+			Object item = items[index];
+			if(ui.getText(item).equals(text)) {
 				if(is(COMBOBOX)) {
 					ui.setText(component, text);
+					ui.setSelectedIndex(component, index);
 					ui.invokeAction(component);
 				} else {
-					ui.setSelectedItem(component, i);
+					ui.setSelectedItem(component, item);
 					// TODO possibly need to invoke change listener here
 				}
 				return;
