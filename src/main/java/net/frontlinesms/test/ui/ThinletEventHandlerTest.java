@@ -37,6 +37,10 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 		rootComponent = getRootComponent();
 		if(Thinlet.getClass(rootComponent).equals(DIALOG)) {
 			ui.add(rootComponent);
+		} else if(Thinlet.getClass(rootComponent).equals(WIDGET_TAB)) {
+			Object pane = create(TABBEDPANE);
+			ui.add(pane, rootComponent);
+			ui.add(pane);
 		}
 	}
 
