@@ -27,6 +27,8 @@ public interface ThinletComponent {
 	public int getChildCount();
 	public ThinletComponentList getChild();
 	public ThinletComponent getChild(int index);
+	public int getRowCount();
+	public ThinletComponent getRow(int index);
 	public String[] getRowText(int index);
 	public ThinletComponentList getRootNode();
 	public ThinletComponentList getSubNode();

@@ -33,6 +33,8 @@ public class MissingThinletComponent implements ThinletComponent {
 	public ThinletComponentList getRootNode() { return fail(ThinletComponentList.class); }
 	public ThinletComponentList getSubNode() { return fail(ThinletComponentList.class); }
 	public int getChildCount() { return fail(int.class); }
+	public int getRowCount() { return fail(int.class); }
+	public ThinletComponent getRow(int index) { return fail(ThinletComponent.class); }
 	public void setSelected(String text) { fail(); }
 
 	private void fail() {

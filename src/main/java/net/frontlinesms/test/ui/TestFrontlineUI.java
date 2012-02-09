@@ -72,6 +72,10 @@ public class TestFrontlineUI extends FrontlineUI {
 		return getAncestor(TREE, c);
 	}
 	
+	public Object getTable(Object c) {
+		return getAncestor(TABLE, c);
+	}
+	
 	public Object getAncestor(String componentClass, Object c) {
 		while(!getClass(c).equals(componentClass)) {
 			c = getParent(c);
@@ -88,14 +92,22 @@ public class TestFrontlineUI extends FrontlineUI {
 		invoke(getTree(node), node, EXPAND);
 	}
 	
+	public void invokeAction(Object component) {
+		invoke(ATTRIBUTE_ACTION, component);
+	}
+	
 	public void invokePerform(Object component) {
+		invoke(PERFORM, component);
+	}
+	
+	public void invoke(String event, Object component) {
 		if(NODE.equals(getClass(component))) {
-			invoke(getTree(component), component, PERFORM);
+			invoke(getTree(component), component, event);
 		} else if(ROW.equals(getClass(component))) {
 			Object table = getAncestor(TABLE, component);
 			setSelectedItem(table, component);
-			invoke(table, component, PERFORM);
-		} else invoke(component, null, PERFORM);
+			invoke(table, component, event);
+		} else invoke(component, null, event);
 	}
 	
 	private long now() { return System.currentTimeMillis(); }

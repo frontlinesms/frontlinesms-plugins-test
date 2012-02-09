@@ -36,6 +36,8 @@ public class RealThinletComponent implements ThinletComponent {
 		if(is(WIDGET_CHECKBOX)) { if(!ui.isSelected(component)) ui.keyChar_threadsafe(' ', component); }
 		else if(is(NODE)) {
 			if(!ui.isSelected(component)) ui.setSelectedItem(ui.getTree(component), component);
+		} else if(is(ROW)) {
+			ui.invokeAction(component);
 		} else notForThis();
 	}
 	public String getText() { return ui.getText(component); }
@@ -58,6 +60,7 @@ public class RealThinletComponent implements ThinletComponent {
 	public boolean isChecked() { onlyFor(WIDGET_CHECKBOX); return ui.isSelected(component); }
 	public boolean isEnabled() { return ui.isEnabled(component); }
 	public boolean isVisible() {
+		if(!ui.getBoolean(component, VISIBLE)) return false;
 		Object c = component;
 		while(ui.getParent(c) != null) c=ui.getParent(c);
 		return c == ui.getDesktop();
@@ -73,9 +76,10 @@ public class RealThinletComponent implements ThinletComponent {
 			options[i] = ui.getText(children[i]);
 		}
 		return options;
-	} 
-	public int getChildCount() {
-		return getChild().count(); }
+	}
+	public int getChildCount() { return getChild().count(); }
+	public int getRowCount() { onlyFor(TABLE); return getChildCount(); }
+	public ThinletComponent getRow(int index) { onlyFor(TABLE); return getChild(index); }
 	public ThinletComponentList getRootNode() {
 		onlyFor(TREE);
 		LinkedList<Object> kids = new LinkedList<Object>();
