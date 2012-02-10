@@ -22,13 +22,16 @@ public interface ThinletComponent {
 	public boolean isChecked();
 	public boolean isExpanded();
 	public boolean isModal();
+	public Object getAttachment();
 	public void setAttachment(Object attachment);
 	public String[] getOptions();
 	public int getChildCount();
 	public ThinletComponentList getChild();
+	public ThinletComponent[] getChildren();
 	public ThinletComponent getChild(int index);
 	public int getRowCount();
 	public ThinletComponent getRow(int index);
+	public ThinletComponent[] getRows();
 	public String[] getRowText(int index);
 	public ThinletComponentList getRootNode();
 	public ThinletComponentList getSubNode();

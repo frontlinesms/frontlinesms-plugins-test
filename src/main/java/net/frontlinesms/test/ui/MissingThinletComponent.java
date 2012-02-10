@@ -25,16 +25,19 @@ public class MissingThinletComponent implements ThinletComponent {
 	public boolean isChecked() { return fail(boolean.class); }
 	public boolean isExpanded() { return fail(boolean.class); }
 	public boolean isModal() { return fail(boolean.class); }
+	public Object getAttachment() { return fail(Object.class); }
 	public void setAttachment(Object attachment) { fail(); }
 	public ThinletComponent find(String _) { return fail(ThinletComponent.class); }
 	public String[] getOptions() { return fail(String[].class); }
 	public ThinletComponentList getChild() { return fail(ThinletComponentList.class); }
 	public ThinletComponent getChild(int index) { return fail(ThinletComponent.class); }
+	public ThinletComponent[] getChildren() { return fail(ThinletComponent[].class); }
 	public ThinletComponentList getRootNode() { return fail(ThinletComponentList.class); }
 	public ThinletComponentList getSubNode() { return fail(ThinletComponentList.class); }
 	public int getChildCount() { return fail(int.class); }
 	public int getRowCount() { return fail(int.class); }
 	public ThinletComponent getRow(int index) { return fail(ThinletComponent.class); }
+	public ThinletComponent[] getRows() { return fail(ThinletComponent[].class); }
 	public void setSelected(String text) { fail(); }
 
 	private void fail() {

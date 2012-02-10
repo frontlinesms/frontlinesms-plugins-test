@@ -86,7 +86,6 @@ public class RealThinletComponent implements ThinletComponent {
 		for(Object o = Thinlet.get(component, ":comp");
 				o != null;
 				o = ui.getNextItem(component, o, true)) {
-			System.out.println(ui.getText(o));
 			kids.add(o);
 		}
 		return new ThinletComponentList(id + ".rootNode", ui, kids);
@@ -99,13 +98,20 @@ public class RealThinletComponent implements ThinletComponent {
 		while(true) {
 			o = ui.getNextItem(tree, o, true);
 			if(o != null) {
-				System.out.println(ui.getText(o));
 				kids.add(o);
 			} else break;
 		}
 		return new ThinletComponentList(id + ".subNode", ui, kids);
 	}
 	public ThinletComponentList getChild() { notFor(TREE, NODE); return new ThinletComponentList(id + ".child", ui, ui.getItems(component)); }
+	public ThinletComponent[] getChildren() {
+		Object[] items = ui.getItems(component);
+		ThinletComponent[] children = new ThinletComponent[items.length];
+		for (int i = 0; i < children.length; i++) {
+			children[i] = new RealThinletComponent(id + "child[" + i + "]", ui, items[i]);
+		}
+		return children;
+	}
 	public ThinletComponent getChild(int index) { return getChild().withIndex(index); }
 	public String[] getRowText(int index) {
 		onlyFor(TABLE);
@@ -117,6 +123,7 @@ public class RealThinletComponent implements ThinletComponent {
 		}
 		return text;
 	}
+	public ThinletComponent[] getRows() { onlyFor(TABLE); return getChildren(); }
 	public Object getAttachment() { return ui.getAttachedObject(component); }
 	public void setSelected(String text) {
 		Object[] items = ui.getItems(component);
