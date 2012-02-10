@@ -45,7 +45,7 @@ public class RealThinletComponent implements ThinletComponent {
 		if(!isEditable()) fail("Cannot set text on uneditable component.");
 		else ui.type(component, text);
 	}
-	public String[] getColumnText() {
+	public String[] getColumnTitles() {
 		onlyFor(TABLE);
 		Object[] children = ui.getItems(Thinlet.get(component, HEADER));
 		int childCount = children.length;
@@ -124,6 +124,18 @@ public class RealThinletComponent implements ThinletComponent {
 		return text;
 	}
 	public ThinletComponent[] getRows() { onlyFor(TABLE); return getChildren(); }
+	public String[] getColumnText(int columnIndex) {
+		onlyFor(TABLE);
+		ThinletComponent[] rows = getRows();
+		String[] columnText = new String[rows.length];
+		for (int i = 0; i < columnText.length; i++) {
+			ThinletComponent cell = rows[i].getCell(columnIndex);
+			columnText[i] = cell instanceof RealThinletComponent?
+					cell.getText(): null;
+		}
+		return columnText;
+	}
+	public ThinletComponent getCell(int columnIndex) { onlyFor(ROW); return getChild(columnIndex); }
 	public Object getAttachment() { return ui.getAttachedObject(component); }
 	public void setSelected(String text) {
 		Object[] items = ui.getItems(component);

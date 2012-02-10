@@ -17,7 +17,7 @@ public class MissingThinletComponent implements ThinletComponent {
 	public void expand() { fail(); }
 	public String getText() { return fail(String.class); }
 	public void setText(String v) { fail(); }
-	public String[] getColumnText() { return fail(String[].class); }
+	public String[] getColumnTitles() { return fail(String[].class); }
 	public String[] getRowText(int index) { return fail(String[].class); }
 	public boolean isEditable() { return fail(boolean.class); }
 	public boolean isEnabled() { return fail(boolean.class); }
@@ -38,6 +38,8 @@ public class MissingThinletComponent implements ThinletComponent {
 	public int getRowCount() { return fail(int.class); }
 	public ThinletComponent getRow(int index) { return fail(ThinletComponent.class); }
 	public ThinletComponent[] getRows() { return fail(ThinletComponent[].class); }
+	public String[] getColumnText(int index) { return fail(String[].class); }
+	public ThinletComponent getCell(int columnIndex) { return fail(ThinletComponent.class); }
 	public void setSelected(String text) { fail(); }
 
 	private void fail() {

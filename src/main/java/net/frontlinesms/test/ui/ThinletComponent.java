@@ -13,7 +13,7 @@ public interface ThinletComponent {
 	
 //> ACCESSORS
 	public String getText();
-	public String[] getColumnText();
+	public String[] getColumnTitles();
 	public void setText(String text);
 	public boolean isEnabled();
 	public boolean isVisible();
@@ -33,6 +33,8 @@ public interface ThinletComponent {
 	public ThinletComponent getRow(int index);
 	public ThinletComponent[] getRows();
 	public String[] getRowText(int index);
+	public String[] getColumnText(int columnIndex);
+	public ThinletComponent getCell(int columnIndex);
 	public ThinletComponentList getRootNode();
 	public ThinletComponentList getSubNode();
 	/** Set's the selected item by it's text value */
