@@ -21,7 +21,7 @@ public class MissingThinletComponent implements ThinletComponent {
 	public String[] getRowText(int index) { return fail(String[].class); }
 	public boolean isEditable() { return fail(boolean.class); }
 	public boolean isEnabled() { return fail(boolean.class); }
-	public boolean isVisible() { return fail(boolean.class); }
+	public boolean isVisible() { return false; }
 	public boolean isChecked() { return fail(boolean.class); }
 	public boolean isExpanded() { return fail(boolean.class); }
 	public boolean isModal() { return fail(boolean.class); }

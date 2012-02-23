@@ -35,7 +35,10 @@ public class RealThinletComponent implements ThinletComponent {
 	public void select() {
 		if(is(WIDGET_CHECKBOX)) { if(!ui.isSelected(component)) ui.keyChar_threadsafe(' ', component); }
 		else if(is(NODE)) {
-			if(!ui.isSelected(component)) ui.setSelectedItem(ui.getTree(component), component);
+			if(!ui.isSelected(component)) {
+				ui.setSelectedItem(ui.getTree(component), component);
+				ui.invokeAction(component);
+			}
 		} else if(is(ROW)) {
 			ui.invokeAction(component);
 		} else notForThis();
@@ -91,7 +94,7 @@ public class RealThinletComponent implements ThinletComponent {
 		return new ThinletComponentList(id + ".rootNode", ui, kids);
 	}
 	public ThinletComponentList getSubNode() {
-		onlyFor(NODE);
+		onlyFor(TREE, NODE);
 		LinkedList<Object> kids = new LinkedList<Object>();
 		Object tree = ui.getTree(component);
 		Object o = component;
@@ -138,19 +141,23 @@ public class RealThinletComponent implements ThinletComponent {
 	public ThinletComponent getCell(int columnIndex) { onlyFor(ROW); return getChild(columnIndex); }
 	public Object getAttachment() { return ui.getAttachedObject(component); }
 	public void setSelected(String text) {
-		Object[] items = ui.getItems(component);
-		for(int index=0; index<items.length; ++index) {
-			Object item = items[index];
-			if(ui.getText(item).equals(text)) {
-				if(is(COMBOBOX)) {
-					ui.setText(component, text);
-					ui.setSelectedIndex(component, index);
-					ui.invokeAction(component);
-				} else {
-					ui.setSelectedItem(component, item);
-					// TODO possibly need to invoke change listener here
+		if(is(TREE)) {
+			getSubNode().withText(text).select();
+		} else {
+			Object[] items = ui.getItems(component);
+			for(int index=0; index<items.length; ++index) {
+				Object item = items[index];
+				if(ui.getText(item).equals(text)) {
+					if(is(COMBOBOX)) {
+						ui.setText(component, text);
+						ui.setSelectedIndex(component, index);
+						ui.invokeAction(component);
+					} else {
+						ui.setSelectedItem(component, item);
+						// TODO possibly need to invoke change listener here
+					}
+					return;
 				}
-				return;
 			}
 		}
 	}
