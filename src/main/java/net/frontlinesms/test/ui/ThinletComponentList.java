@@ -31,6 +31,15 @@ public class ThinletComponentList {
 			return new RealThinletComponent(generatedId, ui, components[index]);
 		else return new MissingThinletComponent(generatedId);
 	}
+
+	public ThinletComponent withAttachment(Object attachment) {
+		String generatedId = id + ".withAttachment('" + attachment + "')";
+		for(Object c : components) {
+			if(ui.getAttachedObject(c).equals(attachment))
+				return new RealThinletComponent(generatedId, ui, c);
+		}
+		return new MissingThinletComponent(generatedId);
+	}
 	
 	public int count() { return components.length; }
 }

@@ -31,7 +31,7 @@ public abstract class ThinletEventHandlerTest<E extends ThinletUiEventHandler> e
 	 * data mocking/fixtures are in place. */
 	protected void initUiForTests() {
 		DEFAULT_ENGLISH_BUNDLE = new MostlyKeyReturningMap(
-				FrontlineSMSConstants.DATEFORMAT_YMD, /* -> */ "d/M/yy");
+				FrontlineSMSConstants.DATEFORMAT_YMD, /* -> */ "d/M/yyyy");
 		ui = new TestFrontlineUI();
 		h = initHandler();
 		rootComponent = getRootComponent();
