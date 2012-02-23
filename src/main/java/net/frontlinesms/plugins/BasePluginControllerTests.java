@@ -4,6 +4,7 @@
 package net.frontlinesms.plugins;
 
 import net.frontlinesms.test.spring.ApplicationContextAwareTestCase;
+import net.frontlinesms.test.ui.UiTestUtils;
 
 import static java.util.Locale.UK;
 
@@ -17,6 +18,7 @@ public abstract class BasePluginControllerTests<E extends BasePluginController> 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		UiTestUtils.initThinletI18n();
 		this.controller = getControllerClass().newInstance();
 	}
 	
