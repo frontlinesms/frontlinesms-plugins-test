@@ -19,9 +19,18 @@ public class RealThinletComponent implements ThinletComponent {
 		this.ui = ui;
 		this.component = c;
 	}
+	
+//> ACCESSORS
+	public String getId() {
+		return id;
+	}
 
 //> ThinletComponent METHODS
-	public void click() { ui.invokeAction(component); }
+	public void click() {
+		if(ui.isEnabled(component)) {
+			ui.invokeAction(component);
+		} else throw new ComponentNotEnabledException(this);
+	}
 	public void doubleClick() { ui.invokePerform(component); }
 	public void expand() {
 		onlyFor(NODE);
