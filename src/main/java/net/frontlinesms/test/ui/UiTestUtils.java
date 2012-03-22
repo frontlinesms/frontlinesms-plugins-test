@@ -12,7 +12,8 @@ import net.frontlinesms.FrontlineSMSConstants;
 public class UiTestUtils {
 	public static void initThinletI18n() {
 		DEFAULT_ENGLISH_BUNDLE = new MostlyKeyReturningMap(
-				FrontlineSMSConstants.DATEFORMAT_YMD, /* -> */ "d/M/yyyy");
+				FrontlineSMSConstants.DATEFORMAT_YMD, /* -> */ "d/M/yyyy",
+				FrontlineSMSConstants.DATEFORMAT_HM, /* -> */ "HH:mm");
 	}
 }
 
