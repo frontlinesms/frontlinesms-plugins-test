@@ -50,12 +50,21 @@ public class RealThinletComponent implements ThinletComponent {
 			}
 		} else if(is(ROW)) {
 			ui.invokeAction(component);
+		} else if(is(CHOICE)) {
+			Object combobox = ui.getParent(component);
+			ui.setText(combobox, getText());
+			ui.setSelectedIndex(combobox, ui.getIndex(combobox, component));
+			ui.invokeAction(combobox);
 		} else notForThis();
 	}
 	public String getText() { return ui.getText(component); }
 	public void setText(String text) {
 		if(!isEditable()) fail("Cannot set text on uneditable component.");
 		else ui.type(component, text);
+	}
+	public int getColumnCount() {
+		onlyFor(TABLE);
+		return ui.getItems(Thinlet.get(component, HEADER)).length;
 	}
 	public String[] getColumnTitles() {
 		onlyFor(TABLE);
@@ -149,26 +158,16 @@ public class RealThinletComponent implements ThinletComponent {
 	}
 	public ThinletComponent getCell(int columnIndex) { onlyFor(ROW); return getChild(columnIndex); }
 	public Object getAttachment() { return ui.getAttachedObject(component); }
-	public void setSelected(String text) {
-		if(is(TREE)) {
-			getSubNode().withText(text).select();
-		} else {
-			Object[] items = ui.getItems(component);
-			for(int index=0; index<items.length; ++index) {
-				Object item = items[index];
-				if(ui.getText(item).equals(text)) {
-					if(is(COMBOBOX)) {
-						ui.setText(component, text);
-						ui.setSelectedIndex(component, index);
-						ui.invokeAction(component);
-					} else {
-						ui.setSelectedItem(component, item);
-						// TODO possibly need to invoke change listener here
-					}
-					return;
-				}
+	public void setSelected(Object textOrAttachment) {
+		ThinletComponentList children = is(TREE)? getSubNode(): getChild();
+		if(textOrAttachment instanceof String) {
+			ThinletComponent withText = children.withText((String) textOrAttachment);
+			if(withText instanceof RealThinletComponent) {
+				withText.select();
+				return;
 			}
 		}
+		children.withAttachment(textOrAttachment).select();
 	}
 	public ThinletComponent find(String descendantName) {
 		String generatedId = id + ".find('" + descendantName + "')";
