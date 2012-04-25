@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -74,5 +76,15 @@ public abstract class ApplicationContextAwareTestCase extends BaseTestCase {
 			}
 		}
 		return bean;
+	}
+	
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public <T> Answer returnMockBean() {
+		return new Answer<T>() {
+			public T answer(InvocationOnMock invocation) throws Throwable {
+				String beanName = (String) invocation.getArguments()[0];
+				return (T) ctx.getBean(beanName);
+			}
+		};
 	}
 }

@@ -28,7 +28,8 @@ public class RealThinletComponent implements ThinletComponent {
 //> ThinletComponent METHODS
 	public void click() {
 		if(ui.isEnabled(component)) {
-			ui.invokeAction(component);
+			if(is(WIDGET_CHECKBOX)) select();
+			else ui.invokeAction(component);
 		} else throw new ComponentNotEnabledException(this);
 	}
 	public void doubleClick() { ui.invokePerform(component); }
